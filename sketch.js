@@ -43,7 +43,7 @@ mycurrent = mouseY
 		for(y=0; y<10;y++){
 			terrain[x][y] = []
 			for(z=0; z<10;z++){
-				terrain[x][y][z] = new Block(x,y,z)
+				terrain[x][y][z] = new Block(floor(map(noise(x), 0, 1, 0, 10)), floor(map(noise(x,y+1), 0, 1, 0, 10)), floor(map(noise(x,y,z+1), 0, 1, 0, 10)))
 			}
 		}
 	}
@@ -51,14 +51,14 @@ mycurrent = mouseY
 	for (x=0;x<10;x+=1) {
 		for(y=0; y<10;y++){
 			for(z=0; z<10;z++){
-				randomizer = random(0,4)
-				if (randomizer < 2){
+				randomizer = noise(random(100))
+				if (randomizer < 0.4){
 				terrain[x][y][z].textr = textarray[1]
 			}
-			if (randomizer < 0.7){
+			if (randomizer < 0.25){
 			terrain[x][y][z].textr = textarray[2]
 		}
-		if (randomizer < 0.2){
+		if (randomizer < 0.1){
 		terrain[x][y][z].textr = textarray[3]
 	}
 			}
@@ -95,7 +95,7 @@ function draw() {
 
 	//collision junk start
 	//remember that time dan said "it's better to check if the object is NOT touching", yeah thats what's going on here
-
+//no collision rip
 	background(51);
 	rotateX(camYaw/50)
 	rotateY(camPitch/50)
