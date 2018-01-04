@@ -4,6 +4,7 @@ let cameraZ = 0;
 let camPitch = 0;
 let camYaw = 0;
 let newX = 0;
+let lastposition;
 let newY
 let newZ
 let xoff = 0 ;
@@ -29,7 +30,6 @@ function preload() {
 
 function setup() {
 	createCanvas(1000, 1000, WEBGL);
-	frameRate(10)
 	//are you ready to enter the ｎｅｘｔ ｄｉｍｅｎｓｉｏｎ
 	//this creates a TWO dimensional array
 	//Imagine it as one array per X coordinate
@@ -38,7 +38,7 @@ function setup() {
 	mxcurrent = mouseX
 mycurrent = mouseY
 //dirt genning
-	for (x=0;x<10;x+=1) {
+	for (x=0;x<10;x++) {
 		terrain[x] = []
 		for(y=0; y<10;y++){
 			terrain[x][y] = []
@@ -51,14 +51,15 @@ mycurrent = mouseY
 	for (x=0;x<10;x+=1) {
 		for(y=0; y<10;y++){
 			for(z=0; z<10;z++){
+				lastposition = z
 				randomizer = noise(random(100))
-				if (randomizer < 0.4){
+				if (randomizer < 0.4 && terrain[x][y][z].y > 2){
 				terrain[x][y][z].textr = textarray[1]
 			}
-			if (randomizer < 0.25){
+			if (randomizer < 0.23 && terrain[x][y][z].y > 3){
 			terrain[x][y][z].textr = textarray[2]
 		}
-		if (randomizer < 0.1){
+		if (randomizer < 0.085 && terrain[x][y][z].y > 7){
 		terrain[x][y][z].textr = textarray[3]
 	}
 			}
@@ -78,12 +79,16 @@ function draw() {
 	camPitch += mxdelta/2.5
 	LockCamera()
 	//vars end
-
+	if (terrain[lastposition][lastposition][lastposition].z * 50 + zoff > 500){
+		terrain[lastposition][lastposition][lastposition] = new Block(lastposition+1,lastposition+1,lastposition+1)
+	}
 	//movement stuff start
 	if (keyCode == UP_ARROW && keyIsPressed){
-		xoff-=cos(radians(camPitch))*6
-		zoff-=sin(radians(camPitch))*6
-		console.log("xoff is:", sin(radians(camPitch))*6, "zoff is:", sin(radians(camPitch))*6)
+		zoff += 15
+		//newZ = sin( mx/width ) * 2
+	}
+	else if (keyCode == DOWN_ARROW && keyIsPressed){
+		zoff -= 15
 		//newZ = sin( mx/width ) * 2
 	}
 	else {
@@ -125,10 +130,15 @@ function DrawCubes() {
 	            for (y=0;y<terrain.length; y++){
 	                for (z=0;z<terrain.length; z++){
 	                    if (terrain[x][y][z].textr == textarray[i]){
+													if (terrain[x][y][z].z * 50 + zoff <= 500 && terrain[x][y][z].z * 50 + zoff >= -500){
 	                        push()
 	                        translate(terrain[x][y][z].x * 50+xoff,terrain[x][y][z].y * 50+yoff, terrain[x][y][z].z*50+zoff)
 	                        box(50, 50, 50)
 	                        pop()
+												}
+												else{
+													terrain[x][y][z].IsVisible = false
+												}
 	                }
 	            }
 	        }
@@ -142,6 +152,7 @@ function Block(MyX, MyY, MyZ){
 	this.z = MyZ
 	//random textures are tweaking for some reason XD
 	this.textr = textarray[0]
+	this.IsVisible = true
 }
 
 function LockCamera(){
