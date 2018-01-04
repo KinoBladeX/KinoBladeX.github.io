@@ -29,6 +29,7 @@ function preload() {
 
 function setup() {
 	createCanvas(1000, 1000, WEBGL);
+	frameRate(10)
 	//are you ready to enter the ｎｅｘｔ ｄｉｍｅｎｓｉｏｎ
 	//this creates a TWO dimensional array
 	//Imagine it as one array per X coordinate
@@ -118,16 +119,20 @@ function RandomTextures() {
 }
 
 function DrawCubes() {
-	for (x=0;x<terrain.length;x++){
-		for (y=0;y<terrain.length; y+=1){
-			for (z=0;z<terrain.length; z+=1){
-				push()
-				texture(terrain[x][y][z].textr)
-				translate(terrain[x][y][z].x * 50+xoff,terrain[x][y][z].y * 50+yoff, terrain[x][y][z].z*50+zoff)
-				box(50, 50, 50)
-				pop()
-			}
-		}
+	for (let i = 0; i < textarray.length; i++){
+	        texture(textarray[i])
+	        for (x=0;x<terrain.length;x++){
+	            for (y=0;y<terrain.length; y++){
+	                for (z=0;z<terrain.length; z++){
+	                    if (terrain[x][y][z].textr == textarray[i]){
+	                        push()
+	                        translate(terrain[x][y][z].x * 50+xoff,terrain[x][y][z].y * 50+yoff, terrain[x][y][z].z*50+zoff)
+	                        box(50, 50, 50)
+	                        pop()
+	                }
+	            }
+	        }
+	    }
 	}
 }
 
